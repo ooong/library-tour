@@ -36,7 +36,8 @@ export default class HomeScreen extends React.Component {
       score: 0,
       datesArr: [
         'May 10, 1956', '1963 Nov.', '[between 1928 and 1940]', '2001-01-13', '1923', 'Aug 25, 1944', 'July 12, 1978','June 20, 1966', '1988 Aug.', '1910 April.', '[between 1930 and 1945]', '[between 1950 and 1960]'
-      ]
+      ],
+      playing: false
     }
     this._handleCorrectGuess = this._handleCorrectGuess.bind(this)
     this._handleIncorrectGuess = this._handleIncorrectGuess.bind(this)
@@ -45,6 +46,7 @@ export default class HomeScreen extends React.Component {
     this._handleScorePress = this._handleScorePress.bind(this)
     this._handleSearchPress = this._handleSearchPress.bind(this)
     this._getRandomPicFromCollections = this._getRandomPicFromCollections.bind(this)
+    this._generateFourButtons = this._generateFourButtons.bind(this)
   }
 
 
@@ -60,6 +62,39 @@ export default class HomeScreen extends React.Component {
 
   render() {
 
+    let dateButtons = null
+    let playingTrue = null
+
+    if (this.state.playing) {
+      playingTrue = <Text>PLAYING TRUE</Text>
+
+      const buttonDates = []
+      while (buttonDates.length < 4) {
+        buttonDates.push(this.state.datesArr[this._assignRandomDateButton()])
+      }
+
+      dateButtons = 
+      <View>
+      {
+        buttonDates.map(buttonDate => {
+          return (
+            <Button 
+            key={buttonDate}
+            onPress={() => {Alert.alert('incorrect guess!');}}
+            title={buttonDate}
+          />
+          )
+        })
+      }
+      
+      
+      </View>
+
+
+
+    }
+
+
     return (
       <View style={styles.container}>
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
@@ -73,25 +108,32 @@ export default class HomeScreen extends React.Component {
           />
 
 
-          <View style={styles.getStartedContainer} key={this.state.mainPicture.pk}>
-            <Text>{this.state.mainPicture.title}</Text>
+          <View style={styles.mainPictureContainer} key={this.state.mainPicture.pk}>
+            <Text>TITLE: {this.state.mainPicture.title}</Text>
             <TouchableHighlight onPress={() => {Alert.alert('Touchable Highlight!');}}>
               <Image
                 style={{ width: 300, height: 400 }}
                 source={{ uri: 'http:' + `${this.state.mainPicture.image.full}` }}
               />
             </TouchableHighlight>
-            <Button
+
+            <Button 
+              margin={30}
+              paddingVertical={50}
               onPress={() => {this._getRandomPicFromCollections()}}
               title="get random pic"
 
             />
             <Button
+              raised
+              backgroundColor="green"
+              borderRadius={7}
+              containerViewStyle={{borderRadius:7}}
               onPress={() => {this._handleCorrectGuess()}}
               title={this.state.mainPicture.created_published_date}
             />
 
-            <Button
+            <Button style={styles.buttonStyle}
               onPress={() => {Alert.alert('incorrect guess!');}}
               title={this.state.datesArr[this._assignRandomDateButton()]}
             />
@@ -101,10 +143,16 @@ export default class HomeScreen extends React.Component {
             <Text style={styles.navBar}>SCORE: {this.state.score} </Text>
             <Button
               raised
-              color="green"
+              backgroundColor="green"
+              borderRadius={25}
+              containerViewStyle={{borderRadius:25}}
               onPress={() => {this._handleScorePress()}}
               title="SCORE"
             />
+
+
+            {playingTrue}
+            {dateButtons}
 
             <TextInput
               style={{ height: 80 }}
@@ -244,6 +292,18 @@ export default class HomeScreen extends React.Component {
       });
   }
 
+  _generateFourButtons = () => {
+    const buttonDates = []
+
+
+    return buttonDates.map(buttonDate => {
+      <Button 
+        onPress={() => {Alert.alert('incorrect guess!');}}
+        title={this.state.datesArr[this._assignRandomDateButton()]}
+      />
+    })
+  }
+
 
   _setViewingPic = (picArray) => {
     const random = Math.floor(Math.random() * (9 - 0)) + 0
@@ -266,7 +326,10 @@ _getRandomPicFromCollections = () => {
     let results = responseJson.results
     let random = Math.floor(Math.random() * (9 - 0)) + 0
     let finalPic = results[random]
-    this.setState({mainPicture: finalPic})
+    this.setState({
+      mainPicture: finalPic,
+      playing: true
+    })
   })
   .catch((error) => {
     console.error(error);
@@ -341,6 +404,10 @@ const styles = StyleSheet.create({
   contentContainer: {
     paddingTop: 30,
   },
+  buttonStyle: {
+    backgroundColor: "green",
+    borderRadius: 25,
+  },
   welcomeContainer: {
     alignItems: 'center',
     marginTop: 10,
@@ -356,6 +423,11 @@ const styles = StyleSheet.create({
   getStartedContainer: {
     alignItems: 'center',
     marginHorizontal: 50,
+  },
+  mainPictureContainer: {
+    alignItems: 'center',
+    marginHorizontal: 50,
+    backgroundColor: 'rgba(0,0,0,0.05)'
   },
   homeScreenFilename: {
     marginVertical: 7,
