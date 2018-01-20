@@ -27,7 +27,8 @@ export default class HomeScreen extends React.Component {
       pictures: [],
       text: 'placeholder',
       picturesTest: [],
-      mainPicture: {}
+      mainPicture: {}, 
+      score: 0
     }
   }
 
@@ -79,9 +80,19 @@ export default class HomeScreen extends React.Component {
 />
           <View style={styles.getStartedContainer}>
             <Text style={styles.navBar}>CATEGORY</Text>
+            <Text style={styles.navBar}>SCORE: {this.state.score} </Text>
+            <Button
+              raised
+              color="green"
+              onPress={() => {
+                this._handleScorePress()
+              }}
+              title="SCORE"
+            />
+
 
             <TextInput
-              style={{ height: 40 }}
+              style={{ height: 80 }}
               placeholder="Type here to translate!"
               onChangeText={(text) => this.setState({ text })}
             />
@@ -95,21 +106,6 @@ export default class HomeScreen extends React.Component {
               title="SEARCH"
             />
 
-            <Text style={styles.getStartedText}>HELLO</Text>
-            <Text style={styles.getStartedText}>ANOTHER HELLO</Text>
-
-
-
-
-
-
-            {
-              this.state.movies.map(movie => {
-                return (
-                  <Text key={movie.title} style={styles.getStartedText}>{movie.title}</Text>
-                )
-              })
-            }
 
             {
               this.state.picturesTest.map(picture => {
@@ -130,6 +126,13 @@ export default class HomeScreen extends React.Component {
                       }}
                       title={picture.created_published_date}
                     />
+                    <Button
+                      onPress={() => {
+                        Alert.alert('Wrong!');
+                      }}
+                      title="Wrong"
+                    />
+                    
                     <Button
                       onPress={() => {
                         Alert.alert('Wrong!');
@@ -231,21 +234,55 @@ export default class HomeScreen extends React.Component {
     );
   };
 
+  _handleScorePress = () => {
+    this.setState({score: this.state.score + 1})
+  }
+
+
+  _setViewingPic = (picArray) => {
+  const random = Math.floor(Math.random() * (9-0)) + 0
+  let currentPic = picArray[random]
+  console.log('CURRENTPIC', currentPic)
+  return currentPic
+  
+}
+
+_getRandomNum = () => {
+  return Math.floor(Math.random() * (200-0)) + 0
+}
+
   _handleSearchPress = () => {
-    fetch('http://loc.gov/pictures/search/?q=' + `${this.state.text}` + '&fo=json')
+    fetch('https://loc.gov/pictures/search/?q=' + `${this.state.text}` + '&fo=json')
       .then((response) => {
         return response.json()
       })
       .then(resResults => {
         const results = resResults.results
-        const tenPics = results.slice(9)
-        console.log(
-          'TENPICS HERE', tenPics
-        )
+        const randomArr = []
+        const getRandomNum = () => {
+          return Math.floor(Math.random() * (200-0)) + 0
+        }
+        while (randomArr.length < 10) {
+          randomArr.push(getRandomNum())
+        }
+        console.log('randoARRAY', randomArr)
+        const tenPics = randomArr.map(index => {
+          return results[index]
+        })
+
+        var newArray = [];
+        while (newArray.length < 10) {
+          let random = Math.floor( Math.random() * 500 )
+          if (results[random] !== undefined) {
+            newArray.push(results[random]);
+          }
+        
+        }
+        console.log('newArray!!', newArray)
+
         this.setState({
-
-
-          picturesTest: tenPics
+          picturesTest: newArray,
+          text: ''
         })
       })
       .catch((error) => {
@@ -296,18 +333,6 @@ function getPicsFromLOCApi() {
 //       console.error(error);
 //     });
 // }
-
-// function getPicsFromLOCApi() {
-//   return fetch('http://loc.gov/pictures/search/?q=panda&co=wpapos')
-//   .then((responseObject) => {
-//     res.json(responseObject)
-//   })
-//   .then(resJson => {
-//     console.log('resJson', resJson)
-//   })
-// }
-
-
 
 
 const styles = StyleSheet.create({
