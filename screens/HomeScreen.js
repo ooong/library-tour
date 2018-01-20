@@ -21,8 +21,6 @@ export default class HomeScreen extends React.Component {
     super(props);
     this.state = {
       title: 'title',
-      movies: [],
-      movie: '',
       total: 0,
       pictures: [],
       text: 'placeholder',
@@ -34,39 +32,26 @@ export default class HomeScreen extends React.Component {
           full: "//www.loc.gov/pictures/cdn/service/pnp/highsm/35800/35859r.jpg"
         }
 
-      }, 
-      score: 0
+      },
+      score: 0,
+      datesArr: [
+        'May 10, 1956', '1963 Nov.', '[between 1928 and 1940]', '2001-01-13', '1923', 'Aug 25, 1944', 'July 12, 1978','June 20, 1966', '1988 Aug.', '1910 April.', '[between 1930 and 1945]', '[between 1950 and 1960]'
+      ]
     }
+    this._handleCorrectGuess = this._handleCorrectGuess.bind(this)
+    this._handleIncorrectGuess = this._handleIncorrectGuess.bind(this)
+    this._handleGuessPress = this._handleGuessPress.bind(this)
+    this._assignRandomDateButton = this._assignRandomDateButton.bind(this)
+    this._handleScorePress = this._handleScorePress.bind(this)
+    this._handleSearchPress = this._handleSearchPress.bind(this)
   }
 
-  // getPicsFromLOCApi() {
-  //   return fetch('http://loc.gov/pictures/search/?q=panda&co=wpapos&fo=json')
-  //     .then((response) => {
-  //       response.json()
-  //     .then((results) => {
-  //       const finalResults = results.results
-  //       this.setState({
-  //         pictures: finalResults
-  //       })
-  //       return results.results
-  //     })
-  //     })
-  //     .catch((error) => {
-  //       console.error(error);
-  //     });
-  // }
 
   componentDidMount() {
     const pictures = getPicsFromLOCApi()
       .then(res => {
         this.setState({
           pictures: res
-        })
-      })
-    const movies = getMoviesFromApiAsync()
-      .then(res => {
-        this.setState({
-          movies: res
         })
       })
   }
@@ -81,72 +66,55 @@ export default class HomeScreen extends React.Component {
 
           </View>
           <Header
-  leftComponent={{ icon: 'menu', color: '#fff' }}
-  centerComponent={{ text: 'MY TITLE', style: { color: '#fff' } }}
-  rightComponent={{ icon: 'home', color: '#fff' }}
-/>
+            leftComponent={{ icon: 'menu', color: '#fff' }}
+            centerComponent={{ text: 'MY TITLE', style: { color: '#fff' } }}
+            rightComponent={{ icon: 'home', color: '#fff' }}
+          />
 
 
-<View style={styles.getStartedContainer} key={this.state.mainPicture.pk}>
-<Text>{this.state.mainPicture.title}</Text>
-<TouchableHighlight onPress={() => {
-  Alert.alert('Touchable Highlight!');
-}}>
-<Image
-  style={{ width: 300, height: 400 }}
-  source={{ uri: 'http:' + `${this.state.mainPicture.image.full}` }}
-/>
-</TouchableHighlight>
-<Button
-  onPress={this._handleGuessPress}
-  title="test guess press"
-  
-/>
-<Button
-  onPress={() => {
-    Alert.alert('Wrong!');
-  }}
-  title={this.state.mainPicture.created_published_date}
-/>
+          <View style={styles.getStartedContainer} key={this.state.mainPicture.pk}>
+            <Text>{this.state.mainPicture.title}</Text>
+            <TouchableHighlight onPress={() => {Alert.alert('Touchable Highlight!');}}>
+              <Image
+                style={{ width: 300, height: 400 }}
+                source={{ uri: 'http:' + `${this.state.mainPicture.image.full}` }}
+              />
+            </TouchableHighlight>
+            <Button
+              onPress={() => {this._handleGuessPress()}}
+              title="play test guesspress"
 
-<Button
-  onPress={() => {
-    Alert.alert('Wrong!');
-  }}
-  title="Wrong"
-/>
+            />
+            <Button
+              onPress={() => {this._handleCorrectGuess()}}
+              title={this.state.mainPicture.created_published_date}
+            />
 
-</View>
-
-
+            <Button
+              onPress={() => {Alert.alert('incorrect guess!');}}
+              title={this.state.datesArr[this._assignRandomDateButton()]}
+            />
+          </View>
 
           <View style={styles.getStartedContainer}>
-            <Text style={styles.navBar}>CATEGORY</Text>
             <Text style={styles.navBar}>SCORE: {this.state.score} </Text>
             <Button
               raised
               color="green"
-              onPress={() => {
-                this._handleScorePress()
-              }}
+              onPress={() => {this._handleScorePress()}}
               title="SCORE"
             />
 
-            
-
-
             <TextInput
               style={{ height: 80 }}
-              placeholder="Type here to translate!"
+              placeholder="Put in a search term!"
               onChangeText={(text) => this.setState({ text })}
             />
 
             <Button
               raised
               color="green"
-              onPress={() => {
-                this._handleSearchPress()
-              }}
+              onPress={() => {this._handleSearchPress()}}
               title="SEARCH"
             />
 
@@ -159,38 +127,29 @@ export default class HomeScreen extends React.Component {
                     <TouchableHighlight onPress={() => {
                       Alert.alert('Touchable Highlight!');
                     }}>
-                    <Image
-                      style={{ width: 300, height: 400 }}
-                      source={{ uri: 'http:' + `${picture.image.full}` }}
-                    />
+                      <Image
+                        style={{ width: 300, height: 400 }}
+                        source={{ uri: 'http:' + `${picture.image.full}` }}
+                      />
                     </TouchableHighlight>
                     <Button
-                      onPress={() => {
-                        Alert.alert('Correct!');
-                      }}
+                      onPress={() => {Alert.alert('Correct!');}}
                       title={picture.created_published_date}
                     />
                     <Button
-                      onPress={() => {
-                        Alert.alert('Wrong!');
-                      }}
+                      onPress={() => {Alert.alert('Wrong!');}}
                       title="Wrong"
                     />
-                    
+
                     <Button
-                      onPress={() => {
-                        Alert.alert('Wrong!');
-                      }}
+                      onPress={() => {Alert.alert('Wrong!');}}
                       title="Wrong"
                     />
 
                   </View>
                 )
               })
-
             }
-
-
 
             {
               this.state.pictures.map(picture => {
@@ -202,14 +161,7 @@ export default class HomeScreen extends React.Component {
                   />
                 )
               })
-
             }
-
-
-            <Text style={styles.getStartedText}>{this.state.movie}</Text>
-            <Text style={styles.getStartedText}>{this.state.title}</Text>
-
-
 
             <Image
               style={{ width: 150, height: 300 }}
@@ -217,30 +169,16 @@ export default class HomeScreen extends React.Component {
             />
 
             <Button
-              onPress={() => {
-                Alert.alert('Correct!');
-              }}
+              onPress={() => { Alert.alert('Correct!'); }}
               title="Correct"
             />
 
             <Button
-              onPress={() => {
-                Alert.alert('Wrong!');
-              }}
+              onPress={() => { Alert.alert('Wrong!'); }}
               title="Wrong"
             />
-
-
-          </View>
-
-          <View style={styles.helpContainer}>
-            <TouchableOpacity onPress={this._handleHelpPress} style={styles.helpLink}>
-              <Text style={styles.helpLinkText}>Help, it didn’t automatically reload!</Text>
-            </TouchableOpacity>
           </View>
         </ScrollView>
-
-
       </View>
     );
   }
@@ -279,47 +217,59 @@ export default class HomeScreen extends React.Component {
   };
 
   _handleScorePress = () => {
-    this.setState({score: this.state.score + 1})
+    this.setState({ score: this.state.score + 1 })
+  }
+
+  _handleCorrectGuess = () => {
+    Alert.alert('Correct!');
+    this.setState({ score: this.state.score + 1 })
+    // need to call another function to re-render
+  }
+
+  _handleIncorrectGuess = () => {
+    Alert.alert('handleIncorrectGuess!');
+    // need to call another function to re-render
   }
 
   _handleGuessPress = () => {
     Alert.alert('You guessed!');
     fetch('http://loc.gov/pictures/search/?q=cheese&co=wpapos&fo=json')
-    .then((response) => response.json())
-    .then((responseJson) => {
-      this.setState({mainPicture: responseJson.results[0]})
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-    
+      .then((response) => response.json())
+      .then((responseJson) => {
+        this.setState({ mainPicture: responseJson.results[0] })
+      })
+      .catch((error) => {
+        console.error(error);
+      });
   }
 
 
   _setViewingPic = (picArray) => {
-  const random = Math.floor(Math.random() * (9-0)) + 0
-  let currentPic = picArray[random]
-  console.log('CURRENTPIC', currentPic)
-  return currentPic
-  
-}
+    const random = Math.floor(Math.random() * (9 - 0)) + 0
+    let currentPic = picArray[random]
+    return currentPic
 
-_getRandomNum = () => {
-  return Math.floor(Math.random() * (200-0)) + 0
-}
+  }
+
+  _getRandomNum = () => {
+    return Math.floor(Math.random() * (200 - 0)) + 0
+  }
+
+  _assignRandomDateButton = () => {
+    return Math.floor(Math.random() * (10 - 0)) + 0
+  }
 
   _handleSearchPress = () => {
     fetch('https://loc.gov/pictures/search/?q=' + `${this.state.text}` + '&fo=json')
       .then((response) => {
         return response.json()
       })
-      .then(resResults => { 
+      .then(resResults => {
         const results = resResults.results
         const tenResults = results.slice(10)
         const randomizedArray = [];
         while (randomizedArray.length < 10) {
-          let random = Math.floor( Math.random() * 300 )
-          console.log('RANDOOOM', random)
+          let random = Math.floor(Math.random() * 300)
           if (results[random] !== undefined && !randomizedArray.includes(results[random])) {
             randomizedArray.push(results[random]);
           }
@@ -327,7 +277,7 @@ _getRandomNum = () => {
         return randomizedArray
       })
       .then(randomizedArray => {
-        this.setState({picturesTest: randomizedArray})
+        this.setState({ picturesTest: randomizedArray })
       })
       .catch((error) => {
         console.error(error);
@@ -336,16 +286,6 @@ _getRandomNum = () => {
   }
 }
 
-function getMoviesFromApiAsync() {
-  return fetch('https://facebook.github.io/react-native/movies.json')
-    .then((response) => response.json())
-    .then((responseJson) => {
-      return responseJson.movies;
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-}
 
 function getPicsFromLOCApi() {
   return fetch('http://loc.gov/pictures/search/?q=panda&co=wpapos&fo=json')
@@ -360,24 +300,7 @@ function getPicsFromLOCApi() {
 
 
 
-// function getPicsFromLOCApi() {
-//   return fetch('http://loc.gov/pictures/search/?q=panda&co=wpapos&fo=json')
-//     .then((response) => {
-//       response.json()
-//     .then((results) => {
-//       console.log('RESULTS.results', results.results)
-//       const finalResults = results.results
-//       this.setState({
-//         pictures: finalResults
-//       })
-//       return results.results
-//     })
-//     })
-//     .catch((error) => {
-//       console.error(error);
-//     });
-// }
-
+//// STYLING
 
 const styles = StyleSheet.create({
   container: {
