@@ -44,6 +44,7 @@ export default class HomeScreen extends React.Component {
     this._assignRandomDateButton = this._assignRandomDateButton.bind(this)
     this._handleScorePress = this._handleScorePress.bind(this)
     this._handleSearchPress = this._handleSearchPress.bind(this)
+    this._getRandomPicFromCollections = this._getRandomPicFromCollections.bind(this)
   }
 
 
@@ -81,8 +82,8 @@ export default class HomeScreen extends React.Component {
               />
             </TouchableHighlight>
             <Button
-              onPress={() => {this._handleGuessPress()}}
-              title="play test guesspress"
+              onPress={() => {this._getRandomPicFromCollections()}}
+              title="get random pic"
 
             />
             <Button
@@ -250,6 +251,29 @@ export default class HomeScreen extends React.Component {
     return currentPic
 
   }
+
+
+_getRandomPicFromCollections = () => {
+  const collectionsArr = [
+    'bbc', 'wpapos', 'pga', 'pos', 'var', 'civwar', 'yan', 'stereo', 'app'
+  ]
+  let collectionIndex = Math.floor(Math.random() * (9 - 0)) + 0
+  fetch('https://loc.gov/pictures/search/?co=' + `${collectionsArr[collectionIndex]}` + '&fo=json')
+  .then((response) => {
+    return response.json()
+  })
+  .then(responseJson => {
+    let results = responseJson.results
+    let random = Math.floor(Math.random() * (9 - 0)) + 0
+    let finalPic = results[random]
+    this.setState({mainPicture: finalPic})
+  })
+  .catch((error) => {
+    console.error(error);
+  })  
+}
+
+
 
   _getRandomNum = () => {
     return Math.floor(Math.random() * (200 - 0)) + 0
