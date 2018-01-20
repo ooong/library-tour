@@ -27,7 +27,14 @@ export default class HomeScreen extends React.Component {
       pictures: [],
       text: 'placeholder',
       picturesTest: [],
-      mainPicture: {}, 
+      mainPicture: {
+        title: 'testing title',
+        pk: 3,
+        image: {
+          full: "//www.loc.gov/pictures/cdn/service/pnp/highsm/35800/35859r.jpg"
+        }
+
+      }, 
       score: 0
     }
   }
@@ -78,6 +85,41 @@ export default class HomeScreen extends React.Component {
   centerComponent={{ text: 'MY TITLE', style: { color: '#fff' } }}
   rightComponent={{ icon: 'home', color: '#fff' }}
 />
+
+
+<View style={styles.getStartedContainer} key={this.state.mainPicture.pk}>
+<Text>{this.state.mainPicture.title}</Text>
+<TouchableHighlight onPress={() => {
+  Alert.alert('Touchable Highlight!');
+}}>
+<Image
+  style={{ width: 300, height: 400 }}
+  source={{ uri: 'http:' + `${this.state.mainPicture.image.full}` }}
+/>
+</TouchableHighlight>
+<Button
+  onPress={this._handleGuessPress}
+  title="test guess press"
+  
+/>
+<Button
+  onPress={() => {
+    Alert.alert('Wrong!');
+  }}
+  title={this.state.mainPicture.created_published_date}
+/>
+
+<Button
+  onPress={() => {
+    Alert.alert('Wrong!');
+  }}
+  title="Wrong"
+/>
+
+</View>
+
+
+
           <View style={styles.getStartedContainer}>
             <Text style={styles.navBar}>CATEGORY</Text>
             <Text style={styles.navBar}>SCORE: {this.state.score} </Text>
@@ -89,6 +131,8 @@ export default class HomeScreen extends React.Component {
               }}
               title="SCORE"
             />
+
+            
 
 
             <TextInput
@@ -238,6 +282,19 @@ export default class HomeScreen extends React.Component {
     this.setState({score: this.state.score + 1})
   }
 
+  _handleGuessPress = () => {
+    Alert.alert('You guessed!');
+    fetch('http://loc.gov/pictures/search/?q=cheese&co=wpapos&fo=json')
+    .then((response) => response.json())
+    .then((responseJson) => {
+      this.setState({mainPicture: responseJson.results[0]})
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+    
+  }
+
 
   _setViewingPic = (picArray) => {
   const random = Math.floor(Math.random() * (9-0)) + 0
@@ -256,34 +313,21 @@ _getRandomNum = () => {
       .then((response) => {
         return response.json()
       })
-      .then(resResults => {
+      .then(resResults => { 
         const results = resResults.results
-        const randomArr = []
-        const getRandomNum = () => {
-          return Math.floor(Math.random() * (200-0)) + 0
-        }
-        while (randomArr.length < 10) {
-          randomArr.push(getRandomNum())
-        }
-        console.log('randoARRAY', randomArr)
-        const tenPics = randomArr.map(index => {
-          return results[index]
-        })
-
-        var newArray = [];
-        while (newArray.length < 10) {
-          let random = Math.floor( Math.random() * 500 )
-          if (results[random] !== undefined) {
-            newArray.push(results[random]);
+        const tenResults = results.slice(10)
+        const randomizedArray = [];
+        while (randomizedArray.length < 10) {
+          let random = Math.floor( Math.random() * 300 )
+          console.log('RANDOOOM', random)
+          if (results[random] !== undefined && !randomizedArray.includes(results[random])) {
+            randomizedArray.push(results[random]);
           }
-        
         }
-        console.log('newArray!!', newArray)
-
-        this.setState({
-          picturesTest: newArray,
-          text: ''
-        })
+        return randomizedArray
+      })
+      .then(randomizedArray => {
+        this.setState({picturesTest: randomizedArray})
       })
       .catch((error) => {
         console.error(error);
