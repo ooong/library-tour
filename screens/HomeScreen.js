@@ -6,11 +6,10 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
-  View,
-  Button, Alert, TextInput
+  View, Alert, TextInput, TouchableHighlight
 } from 'react-native';
 import { WebBrowser } from 'expo';
-
+import { Button, Header } from 'react-native-elements'
 import { MonoText } from '../components/StyledText';
 
 export default class HomeScreen extends React.Component {
@@ -49,21 +48,21 @@ export default class HomeScreen extends React.Component {
   //     });
   // }
 
-componentDidMount() {
-  const pictures = getPicsFromLOCApi()
-  .then(res => {
-    this.setState({
-      pictures: res
-    })
-  })
-  const movies = getMoviesFromApiAsync()
-  .then(res => {
-    this.setState({
-      movies: res
-    })
-  })
-}
-  
+  componentDidMount() {
+    const pictures = getPicsFromLOCApi()
+      .then(res => {
+        this.setState({
+          pictures: res
+        })
+      })
+    const movies = getMoviesFromApiAsync()
+      .then(res => {
+        this.setState({
+          movies: res
+        })
+      })
+  }
+
 
   render() {
 
@@ -71,25 +70,31 @@ componentDidMount() {
       <View style={styles.container}>
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
           <View style={styles.welcomeContainer}>
-            
+
           </View>
-
+          <Header
+  leftComponent={{ icon: 'menu', color: '#fff' }}
+  centerComponent={{ text: 'MY TITLE', style: { color: '#fff' } }}
+  rightComponent={{ icon: 'home', color: '#fff' }}
+/>
           <View style={styles.getStartedContainer}>
-          <Text style={styles.navBar}>CATEGORY</Text>
+            <Text style={styles.navBar}>CATEGORY</Text>
 
-          <TextInput
-          style={{height: 40}}
-          placeholder="Type here to translate!"
-          onChangeText={(text) => this.setState({text})}
-        />
+            <TextInput
+              style={{ height: 40 }}
+              placeholder="Type here to translate!"
+              onChangeText={(text) => this.setState({ text })}
+            />
 
-        <Button
-          onPress={() => {
-          this._handleSearchPress()
-          }}
-          title="Press Me"
-          />
-            
+            <Button
+              raised
+              color="green"
+              onPress={() => {
+                this._handleSearchPress()
+              }}
+              title="SEARCH"
+            />
+
             <Text style={styles.getStartedText}>HELLO</Text>
             <Text style={styles.getStartedText}>ANOTHER HELLO</Text>
 
@@ -109,25 +114,28 @@ componentDidMount() {
             {
               this.state.picturesTest.map(picture => {
                 return (
-                  <View>
+                  <View key={picture.pk}>
+                    <Text>{picture.title}</Text>
+                    <TouchableHighlight onPress={() => {
+                      Alert.alert('Touchable Highlight!');
+                    }}>
                     <Image
-                  key={picture.pk}
-                  style={{ width: 300, height: 400 }}
-                  source={{ uri: 'http:'+`${picture.image.full}` }}
-                />
-                <Button
-                onPress={() => {
-                  Alert.alert('Correct!');
-                }}
-                title="Correct"
-              />
-  
-              <Button
-              onPress={() => {
-                Alert.alert('Wrong!');
-              }}
-              title="Wrong"
-            />
+                      style={{ width: 300, height: 400 }}
+                      source={{ uri: 'http:' + `${picture.image.full}` }}
+                    />
+                    </TouchableHighlight>
+                    <Button
+                      onPress={() => {
+                        Alert.alert('Correct!');
+                      }}
+                      title={picture.created_published_date}
+                    />
+                    <Button
+                      onPress={() => {
+                        Alert.alert('Wrong!');
+                      }}
+                      title="Wrong"
+                    />
 
                   </View>
                 )
@@ -135,30 +143,26 @@ componentDidMount() {
 
             }
 
-            
+
 
             {
               this.state.pictures.map(picture => {
                 return (
                   <Image
-                  key={picture.pk}
-                  style={{ width: 300, height: 400 }}
-                  source={{ uri: 'http:'+`${picture.image.full}` }}
-                />
+                    key={picture.pk}
+                    style={{ width: 300, height: 400 }}
+                    source={{ uri: 'http:' + `${picture.image.full}` }}
+                  />
                 )
               })
 
             }
 
-            
-
-            
-
 
             <Text style={styles.getStartedText}>{this.state.movie}</Text>
             <Text style={styles.getStartedText}>{this.state.title}</Text>
 
-          
+
 
             <Image
               style={{ width: 150, height: 300 }}
@@ -173,11 +177,11 @@ componentDidMount() {
             />
 
             <Button
-            onPress={() => {
-              Alert.alert('Wrong!');
-            }}
-            title="Wrong"
-          />
+              onPress={() => {
+                Alert.alert('Wrong!');
+              }}
+              title="Wrong"
+            />
 
 
           </View>
@@ -189,7 +193,7 @@ componentDidMount() {
           </View>
         </ScrollView>
 
-        
+
       </View>
     );
   }
@@ -229,24 +233,24 @@ componentDidMount() {
 
   _handleSearchPress = () => {
     fetch('http://loc.gov/pictures/search/?q=' + `${this.state.text}` + '&fo=json')
-        .then((response) =>  {
-          return response.json()
-        })   
-        .then(resResults => {
-            const results = resResults.results
-            const tenPics = results.slice(9)
-            console.log(
-              'TENPICS HERE', tenPics
-            )
-            this.setState({
-              
+      .then((response) => {
+        return response.json()
+      })
+      .then(resResults => {
+        const results = resResults.results
+        const tenPics = results.slice(9)
+        console.log(
+          'TENPICS HERE', tenPics
+        )
+        this.setState({
 
-              picturesTest: tenPics
-            })
+
+          picturesTest: tenPics
         })
-        .catch((error) => {
-            console.error(error);
-        });
+      })
+      .catch((error) => {
+        console.error(error);
+      });
     Alert.alert('pressed!')
   }
 }
