@@ -1,5 +1,5 @@
 import React from 'react';
-import { ScrollView, StyleSheet, Text, TextInput, Button, View, TouchableHighlight, Image, Alert } from 'react-native';
+import { ScrollView, StyleSheet, Text, TextInput, Button, View, TouchableHighlight, Image, Alert, Modal } from 'react-native';
 
 export default class LinksScreen extends React.Component {
   static navigationOptions = {
@@ -10,6 +10,7 @@ export default class LinksScreen extends React.Component {
     super(props);
     this.state = {
       pictures: [],
+      modalVisible: false,
       text: '',
       picture: {
         title: 'testing title',
@@ -17,10 +18,13 @@ export default class LinksScreen extends React.Component {
         image: {
           full: "//www.loc.gov/pictures/cdn/service/pnp/highsm/35800/35859r.jpg"
         }
-      }
+      },
+      selectedItem: {}
     }
     this._handleSearchPress = this._handleSearchPress.bind(this)
     this._getRandomPicFromCollections = this._getRandomPicFromCollections.bind(this)
+    this._openModal = this._openModal.bind(this)
+    this._closeModal = this._closeModal.bind(this)
   }
 
   componentDidMount() {
@@ -52,22 +56,41 @@ export default class LinksScreen extends React.Component {
           title="SEARCH"
         />
 
+        <Modal
+        visible={this.state.modalVisible}
+        animationType={'slide'}
+        onRequestClose={() => this._closeModal()}
+    >
+      <View style={styles.modalContainer}>
+        <View style={styles.innerContainer}>
+          <Text>Title: {this.state.selectedItem.title}</Text>
+          <Button
+              onPress={() => this._closeModal()}
+              title="Close"
+          >
+          </Button>
+        </View>
+      </View>
+    </Modal>
 
-        {
+
+        { this.state.pictures &&
           this.state.pictures.map(picture => {
             return (
               <View key={picture.pk}>
-                <Text>{picture.title}</Text>
-                <TouchableHighlight onPress={() => {
-                  this._getRandomPicFromCollections()
-                }}>
+
                   <Image
                     style={{ width: 300, height: 400 }}
                     source={{ uri: 'http:' + `${picture.image.full}` }}
                   />
                   
-                </TouchableHighlight>
-                <Text>{picture.created_published_date}</Text>
+                <Text style={styles.dateFormatting}>{picture.created_published_date}</Text>
+                <Text>{picture.title}</Text>
+
+                <Button
+                    onPress={() => this._openModal(picture.pk)}
+                    title="Learn more"
+                />
               </View>
             )
           })
@@ -95,7 +118,9 @@ export default class LinksScreen extends React.Component {
         return randomizedArray
       })
       .then(randomizedArray => {
+
         this.setState({ pictures: randomizedArray })
+        console.log('RANDOMARRAY', randomizedArray)
       })
       .catch((error) => {
         console.error(error);
@@ -121,6 +146,24 @@ export default class LinksScreen extends React.Component {
     .catch((error) => {
       console.error(error);
     })  
+  }
+
+  _openModal(pictureId) {
+    console.log('THISSTATEPICS[0]', this.state.pictures[0])
+    console.log('THISSTATEPICS[0].PK', this.state.pictures[0].pk)
+    const filteredArr = this.state.pictures.filter(picture => picture.pk === pictureId)
+    const item = filteredArr[0]
+    console.log('FILTEREDARRAY', filteredArr)
+    
+    this.setState({
+      modalVisible:true,
+      selectedItem: item
+    });
+    
+  }
+  
+  _closeModal() {
+    this.setState({modalVisible:false});
   }
 
 
@@ -152,4 +195,18 @@ const styles = StyleSheet.create({
     paddingTop: 15,
     backgroundColor: '#fff',
   },
+  dateFormatting: {
+    alignItems: 'center',
+    marginVertical: 10,
+    fontWeight: 'bold',
+    textAlign: 'center'
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    backgroundColor: 'grey',
+  },
+  innerContainer: {
+    alignItems: 'center',
+  }
 });
