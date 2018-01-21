@@ -35,7 +35,7 @@ export default class HomeScreen extends React.Component {
       },
       score: 0,
       datesArr: [
-        'May 10, 1956', '1963 Nov.', '[between 1928 and 1940]', '2001-01-13', '1923', 'Aug 25, 1944', 'July 12, 1978','June 20, 1966', '1988 Aug.', '1910 April.', '[between 1930 and 1945]', '[between 1950 and 1960]'
+        'May 10, 1956', '1963 Nov.', '[between 1928 and 1940]', '2001-01-13', '1923', 'Aug 25, 1944', 'July 12, 1978','June 20, 1966', '1988 Aug.', '1910 April.', '[between 1930 and 1945]', '[between 1950 and 1960]', '[between 1890 and 1910]', '[between 1800 and 1830]', 'July 3, 1915', 'January 27, 1922', '1993-04-17', 'March 15, 1988', 'April 8, 1993', 'Aug 30, 1988', '[between 1860 and 1870]', 'February 9, 1955'
       ],
       playing: false
     }
@@ -70,8 +70,14 @@ export default class HomeScreen extends React.Component {
 
       const buttonDates = []
       while (buttonDates.length < 4) {
-        buttonDates.push(this.state.datesArr[this._assignRandomDateButton()])
+        let random = this._assignRandomDateButton()
+        if (!buttonDates.includes(this.state.datesArr[random])) {
+          buttonDates.push(this.state.datesArr[random])
+        }
       }
+      let random = Math.floor(Math.random() * (3 - 0)) + 0
+      buttonDates.splice(random, 1, this.state.mainPicture.created_published_date)
+
 
       dateButtons = 
       <View>
@@ -80,7 +86,7 @@ export default class HomeScreen extends React.Component {
           return (
             <Button 
             key={buttonDate}
-            onPress={() => {Alert.alert('incorrect guess!');}}
+            onPress={(event) => {this._handleGuessPress(event, this.props.title)}}
             title={buttonDate}
           />
           )
@@ -133,10 +139,6 @@ export default class HomeScreen extends React.Component {
               title={this.state.mainPicture.created_published_date}
             />
 
-            <Button style={styles.buttonStyle}
-              onPress={() => {Alert.alert('incorrect guess!');}}
-              title={this.state.datesArr[this._assignRandomDateButton()]}
-            />
           </View>
 
           <View style={styles.getStartedContainer}>
@@ -280,16 +282,24 @@ export default class HomeScreen extends React.Component {
     // need to call another function to re-render
   }
 
-  _handleGuessPress = () => {
-    Alert.alert('You guessed!');
+  _handleGuessPress = (event, buttonTitle) => {
+    console.log('EVENT', event)
+    if (this.props.title === this.state.mainPicture.created_published_date) {
+      Alert.alert('You got it right!');
+    } else {
+
+      Alert.alert('Wrong guess!');
+    }
     fetch('http://loc.gov/pictures/search/?q=cheese&co=wpapos&fo=json')
-      .then((response) => response.json())
+    .then((response) => response.json())
       .then((responseJson) => {
-        this.setState({ mainPicture: responseJson.results[0] })
+        this.setState({ 
+          score: this.state.score + 1,
+          mainPicture: responseJson.results[0] })
       })
       .catch((error) => {
         console.error(error);
-      });
+      });     
   }
 
   _generateFourButtons = () => {
@@ -343,7 +353,7 @@ _getRandomPicFromCollections = () => {
   }
 
   _assignRandomDateButton = () => {
-    return Math.floor(Math.random() * (10 - 0)) + 0
+    return Math.floor(Math.random() * (20 - 0)) + 0
   }
 
   _handleSearchPress = () => {
