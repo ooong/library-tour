@@ -1,5 +1,6 @@
 import React from 'react';
 import { ScrollView, StyleSheet, Text, TextInput, Button, View, TouchableHighlight, Image, Alert, Modal } from 'react-native';
+import { SearchBar } from 'react-native-elements'
 
 export default class LinksScreen extends React.Component {
   static navigationOptions = {
@@ -38,69 +39,78 @@ export default class LinksScreen extends React.Component {
 
   render() {
     return (
-      <ScrollView style={styles.container}>
+      <View style={styles.container}>
+        <ScrollView style={styles.container}>
 
 
-        <View style={styles.getStartedContainer}>
+          <View style={styles.getStartedContainer}>
 
-        <TextInput
-          style={{ height: 80 }}
-          placeholder="Put in a search term!"
-          onChangeText={(text) => this.setState({ text })}
-        />
+            <SearchBar
+              ref={search => this.search = search}
+              round
+              onChangeText={(text) => this.setState({ text })}
+              placeholder='Type Here...' />
 
-        <Button
-          raised
-          color="green"
-          onPress={() => {this._handleSearchPress()}}
-          title="SEARCH"
-        />
+            <TextInput
+              style={{ height: 80 }}
+              placeholder="Put in a search term!"
+              onChangeText={(text) => this.setState({ text })}
+            />
 
-        <Modal
-        visible={this.state.modalVisible}
-        animationType={'slide'}
-        onRequestClose={() => this._closeModal()}
-    >
-      <View style={styles.modalContainer}>
-        <View style={styles.innerContainer}>
-          <Text>Title: {this.state.selectedItem.title}</Text>
-          <Button
-              onPress={() => this._closeModal()}
-              title="Close"
-          >
-          </Button>
-        </View>
-      </View>
-    </Modal>
+            <Button
+              raised
+              color="green"
+              onPress={() => { this._handleSearchPress() }}
+              title="SEARCH"
+            />
 
-
-        { this.state.pictures &&
-          this.state.pictures.map(picture => {
-            return (
-              <View key={picture.pk}>
-
-                  <Image
-                    style={{ width: 300, height: 400 }}
-                    source={{ uri: 'http:' + `${picture.image.full}` }}
-                  />
-                  
-                <Text style={styles.dateFormatting}>{picture.created_published_date}</Text>
-                <Text>{picture.title}</Text>
-
-                <Button
-                    onPress={() => this._openModal(picture.pk)}
-                    title="Learn more"
-                />
+            <Modal
+              visible={this.state.modalVisible}
+              animationType={'slide'}
+              onRequestClose={() => this._closeModal()}
+            >
+              <View style={styles.modalContainer}>
+                <View style={styles.innerContainer}>
+                  <Text>Title: {this.state.selectedItem.title}</Text>
+                  <Button
+                    onPress={() => this._closeModal()}
+                    title="Close"
+                  >
+                  </Button>
+                </View>
               </View>
-            )
-          })
-        }
+            </Modal>
 
+
+            {this.state.pictures &&
+              this.state.pictures.map(picture => {
+                return (
+                  <View key={picture.pk}>
+
+                    <Image
+                      style={{ width: 300, height: 400 }}
+                      source={{ uri: 'http:' + `${picture.image.full}` }}
+                    />
+
+                    <Text style={styles.dateFormatting}>{picture.created_published_date}</Text>
+                    <Text>{picture.title}</Text>
+
+                    <Button
+                      onPress={() => this._openModal(picture.pk)}
+                      title="Learn more"
+                    />
+                  </View>
+                )
+              })
+            }
+
+          </View>
+        </ScrollView>
       </View>
-      </ScrollView>
     );
   }
   _handleSearchPress = () => {
+    this.search.clearText();
     fetch('https://loc.gov/pictures/search/?q=' + `${this.state.text}` + '&fo=json')
       .then((response) => {
         return response.json()
@@ -120,7 +130,6 @@ export default class LinksScreen extends React.Component {
       .then(randomizedArray => {
 
         this.setState({ pictures: randomizedArray })
-        console.log('RANDOMARRAY', randomizedArray)
       })
       .catch((error) => {
         console.error(error);
@@ -134,36 +143,32 @@ export default class LinksScreen extends React.Component {
     ]
     let collectionIndex = Math.floor(Math.random() * (9 - 0)) + 0
     fetch('https://loc.gov/pictures/search/?co=' + `${collectionsArr[collectionIndex]}` + '&fo=json')
-    .then((response) => {
-      return response.json()
-    })
-    .then(responseJson => {
-      let results = responseJson.results
-      let random = Math.floor(Math.random() * (9 - 0)) + 0
-      let finalPic = results[random]
-      this.setState({picture: finalPic})
-    })
-    .catch((error) => {
-      console.error(error);
-    })  
+      .then((response) => {
+        return response.json()
+      })
+      .then(responseJson => {
+        let results = responseJson.results
+        let random = Math.floor(Math.random() * (9 - 0)) + 0
+        let finalPic = results[random]
+        this.setState({ picture: finalPic })
+      })
+      .catch((error) => {
+        console.error(error);
+      })
   }
 
   _openModal(pictureId) {
-    console.log('THISSTATEPICS[0]', this.state.pictures[0])
-    console.log('THISSTATEPICS[0].PK', this.state.pictures[0].pk)
     const filteredArr = this.state.pictures.filter(picture => picture.pk === pictureId)
     const item = filteredArr[0]
-    console.log('FILTEREDARRAY', filteredArr)
-    
     this.setState({
-      modalVisible:true,
+      modalVisible: true,
       selectedItem: item
     });
-    
+
   }
-  
+
   _closeModal() {
-    this.setState({modalVisible:false});
+    this.setState({ modalVisible: false });
   }
 
 

@@ -37,7 +37,7 @@ export default class HomeScreen extends React.Component {
       },
       score: 0,
       datesArr: [
-        'May 10, 1956', '1963 Nov.', '[between 1928 and 1940]', '2001-01-13', '1923', 'Aug 25, 1944', 'July 12, 1978','June 20, 1966', '1988 Aug.', '1910 April.', '[between 1930 and 1945]', '[between 1950 and 1960]', '[between 1890 and 1910]', '[between 1800 and 1830]', 'July 3, 1915', 'January 27, 1922', '1993-04-17', 'March 15, 1988', 'April 8, 1993', 'Aug 30, 1988', '[between 1860 and 1870]', 'February 9, 1955'
+        'May 10, 1956', '1963 Nov.', '[between 1928 and 1940]', '2001-01-13', '1923', 'Aug 25, 1944', 'July 12, 1978', 'June 20, 1966', '1988 Aug.', '1910 April.', '[between 1930 and 1945]', '[between 1950 and 1960]', '[between 1890 and 1910]', '[between 1800 and 1830]', 'July 3, 1915', 'January 27, 1922', '1993-04-17', 'March 15, 1988', 'April 8, 1993', 'Aug 30, 1988', '[between 1860 and 1870]', 'February 9, 1955'
       ],
       playing: false,
       modalVisable: false
@@ -77,69 +77,91 @@ export default class HomeScreen extends React.Component {
         }
       }
 
-      const rightButton = 
+      const rightButton =
 
-      <Button 
-      onPress={() => {this._handleCorrectGuess()}}
-      title={this.state.mainPicture.created_published_date}
-    />
-
-      dateButtons = 
-      <View>
-        {
-          wrongDates.map(wrongButton => {
-            return (
-              <Button 
-            key={wrongButton}
-            onPress={() => {this._handleIncorrectGuess()}}
-            title={wrongButton}
+        <View>
+          <Button
+            borderRadius={25}
+            containerViewStyle={{ borderRadius: 25 }}
+            margin={30}
+            backgroundColor="green"
+            onPress={() => { this._handleCorrectGuess() }}
+            title={this.state.mainPicture.created_published_date}
           />
-            )
-          })
+        </View>
 
-        }
-        {
+      dateButtons =
+        <View>
+          {
+            wrongDates.map(wrongButton => {
+              return (
+               <View style={styles.dateButtonStyle}
+               key={wrongButton}
+               > 
+                <Button
+                  borderRadius={25}
+                  containerViewStyle={{ borderRadius: 25 }}
+                  margin={30}
+                  backgroundColor="green"
+                  
+                  onPress={() => { this._handleIncorrectGuess() }}
+                  title={wrongButton}
+                />
+                </View>
+              )
+            })
 
-          <Button 
-          onPress={() => {this._handleCorrectGuess()}}
-          title={this.state.mainPicture.created_published_date}
-        />
-    
-        }    
-      </View>
+
+
+          }
+          {
+            <View style={styles.dateButtonStyle}>
+          <Button
+            borderRadius={25}
+            containerViewStyle={{ borderRadius: 25 }}
+            margin={30}
+            backgroundColor="green"
+            onPress={() => { this._handleCorrectGuess() }}
+            title={this.state.mainPicture.created_published_date}
+          />
+          </View>
+          }
+        </View>
     }
 
 
     return (
       <View style={styles.container}>
+      <Header
+            leftComponent={{ icon: 'menu', color: '#fff' }}
+            centerComponent={{ text: `score: ${this.state.score}`, style: { color: '#fff' } }}
+            rightComponent={{ text: `score: ${this.state.score}`, style: { color: '#fff' } }}
+          />
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
           <View style={styles.welcomeContainer}>
 
           </View>
-          <Header
-            leftComponent={{ icon: 'menu', color: '#fff' }}
-            centerComponent={{ text: 'MY TITLE', style: { color: '#fff' } }}
-            rightComponent={{ icon: 'home', color: '#fff' }}
-          />
+          
 
 
           <View style={styles.mainPictureContainer} key={this.state.mainPicture.pk}>
             <Text>TITLE: {this.state.mainPicture.title}</Text>
-            <TouchableHighlight onPress={() => {Alert.alert('Touchable Highlight!');}}>
+            <TouchableHighlight onPress={() => { Alert.alert('Touchable Highlight!'); }}>
               <Image
                 style={{ width: 300, height: 400 }}
+                borderRadius={7}
                 source={{ uri: 'http:' + `${this.state.mainPicture.image.full}` }}
               />
             </TouchableHighlight>
 
-            <Button 
+            <Button
               raised
               backgroundColor="green"
               borderRadius={25}
-              containerViewStyle={{borderRadius:25}}
+              containerViewStyle={{ borderRadius: 25 }}
               margin={30}
               paddingVertical={50}
-              onPress={() => {this._getRandomPicFromCollections()}}
+              onPress={() => { this._getRandomPicFromCollections() }}
               title="get random pic"
 
             />
@@ -147,8 +169,8 @@ export default class HomeScreen extends React.Component {
               raised
               backgroundColor="green"
               borderRadius={7}
-              containerViewStyle={{borderRadius:7}}
-              onPress={() => {this._handleCorrectGuess()}}
+              containerViewStyle={{ borderRadius: 7 }}
+              onPress={() => { this._handleCorrectGuess() }}
               title={this.state.mainPicture.created_published_date}
             />
 
@@ -159,52 +181,6 @@ export default class HomeScreen extends React.Component {
 
             {playingTrue}
             {dateButtons}
-
-            <TextInput
-              style={{ height: 80 }}
-              placeholder="Put in a search term!"
-              onChangeText={(text) => this.setState({ text })}
-            />
-
-            <Button
-              raised
-              color="green"
-              onPress={() => {this._handleSearchPress()}}
-              title="SEARCH"
-            />
-
-
-            {
-              this.state.picturesTest.map(picture => {
-                return (
-                  <View key={picture.pk}>
-                    <Text>{picture.title}</Text>
-                    <TouchableHighlight onPress={() => {
-                      Alert.alert('Touchable Highlight!');
-                    }}>
-                      <Image
-                        style={{ width: 300, height: 400 }}
-                        source={{ uri: 'http:' + `${picture.image.full}` }}
-                      />
-                    </TouchableHighlight>
-                    <Button
-                      onPress={() => {Alert.alert('Correct!');}}
-                      title={picture.created_published_date}
-                    />
-                    <Button
-                      onPress={() => {Alert.alert('Wrong!');}}
-                      title="Wrong"
-                    />
-
-                    <Button
-                      onPress={() => {Alert.alert('Wrong!');}}
-                      title="Wrong"
-                    />
-
-                  </View>
-                )
-              })
-            }
 
           </View>
         </ScrollView>
@@ -265,44 +241,44 @@ export default class HomeScreen extends React.Component {
     return currentPic
   }
 
-_getRandomPicFromCollections = (gameResult) => {
-  const collectionsArr = [
-    'bbc', 'wpapos', 'pga', 'pos', 'var', 'civwar', 'yan', 'stereo', 'app'
-  ]
-  let collectionIndex = Math.floor(Math.random() * (9 - 0)) + 0
-  fetch('https://loc.gov/pictures/search/?co=' + `${collectionsArr[collectionIndex]}` + '&fo=json')
-  .then((response) => {
-    return response.json()
-  })
-  .then(responseJson => {
-    let results = responseJson.results
-    let random = Math.floor(Math.random() * (9 - 0)) + 0
-    let finalPic = results[random]
-    if (!gameResult) {
-      this.setState({
-        mainPicture: finalPic,
-        playing: true
+  _getRandomPicFromCollections = (gameResult) => {
+    const collectionsArr = [
+      'bbc', 'wpapos', 'pga', 'pos', 'var', 'civwar', 'yan', 'stereo', 'app'
+    ]
+    let collectionIndex = Math.floor(Math.random() * (9 - 0)) + 0
+    fetch('https://loc.gov/pictures/search/?co=' + `${collectionsArr[collectionIndex]}` + '&fo=json')
+      .then((response) => {
+        return response.json()
       })
-    } else {
-      this.setState({
-        mainPicture: finalPic,
-        playing: true,
-        score: this.state.score + 1
+      .then(responseJson => {
+        let results = responseJson.results
+        let random = Math.floor(Math.random() * (9 - 0)) + 0
+        let finalPic = results[random]
+        if (!gameResult) {
+          this.setState({
+            mainPicture: finalPic,
+            playing: true
+          })
+        } else {
+          this.setState({
+            mainPicture: finalPic,
+            playing: true,
+            score: this.state.score + 1
+          })
+        }
       })
-    } 
-  })
-  .catch((error) => {
-    console.error(error);
-  })  
-}
+      .catch((error) => {
+        console.error(error);
+      })
+  }
 
-_openModal() {
-  this.setState({modalVisible:true});
-}
+  _openModal() {
+    this.setState({ modalVisible: true });
+  }
 
-_closeModal() {
-  this.setState({modalVisible:false});
-}
+  _closeModal() {
+    this.setState({ modalVisible: false });
+  }
 
 
   _getRandomNum = () => {
@@ -375,6 +351,11 @@ const styles = StyleSheet.create({
     backgroundColor: "green",
     borderRadius: 25,
   },
+  dateButtonStyle: {
+    backgroundColor: "green",
+    borderRadius: 25,
+    marginVertical: 2
+  },
   welcomeContainer: {
     alignItems: 'center',
     marginTop: 10,
@@ -399,7 +380,6 @@ const styles = StyleSheet.create({
   mainPictureContainer: {
     alignItems: 'center',
     marginHorizontal: 50,
-    backgroundColor: 'rgba(0,0,0,0.05)'
   },
   homeScreenFilename: {
     marginVertical: 7,
