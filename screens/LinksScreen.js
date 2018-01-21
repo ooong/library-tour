@@ -1,10 +1,10 @@
 import React from 'react';
-import { ScrollView, StyleSheet, Text, TextInput, Button, View, TouchableHighlight, Image, Alert, Modal } from 'react-native';
+import { ScrollView, StyleSheet, Text, TextInput, Button, View, TouchableHighlight, Image, Alert, Modal, Picker } from 'react-native';
 import { SearchBar } from 'react-native-elements'
 
 export default class LinksScreen extends React.Component {
   static navigationOptions = {
-    title: 'Browse',
+    title: 'Explore',
   };
 
   constructor(props) {
@@ -20,7 +20,8 @@ export default class LinksScreen extends React.Component {
           full: "//www.loc.gov/pictures/cdn/service/pnp/highsm/35800/35859r.jpg"
         }
       },
-      selectedItem: {}
+      selectedItem: {},
+      collection: ''
     }
     this._handleSearchPress = this._handleSearchPress.bind(this)
     this._getRandomPicFromCollections = this._getRandomPicFromCollections.bind(this)
@@ -64,6 +65,19 @@ export default class LinksScreen extends React.Component {
               title="SEARCH"
             />
 
+            <View>
+            <Text>Pick a collection</Text>
+            <Picker 
+              color='black'
+              selectedValue={this.state.collection}
+              onValueChange={(itemValue, itemIndex) => this.setState({collection: itemValue})}>
+              <Picker.Item label="WPA posters" value="wpapos" />
+              <Picker.Item label="JavaScript" value="js" />
+            </Picker>
+            <Text>Description</Text>
+            <Text>Description</Text>
+            </View>
+
             <Modal
               visible={this.state.modalVisible}
               animationType={'slide'}
@@ -72,6 +86,8 @@ export default class LinksScreen extends React.Component {
               <View style={styles.modalContainer}>
                 <View style={styles.innerContainer}>
                   <Text>Title: {this.state.selectedItem.title}</Text>
+                  <Text>Creator: {this.state.selectedItem.creator}</Text>
+                  <Text>Subjects: {this.state.selectedItem.subjects}</Text>
                   <Button
                     onPress={() => this._closeModal()}
                     title="Close"
@@ -85,9 +101,14 @@ export default class LinksScreen extends React.Component {
             {this.state.pictures &&
               this.state.pictures.map(picture => {
                 return (
-                  <View key={picture.pk}>
+                  <View 
+                  style={{marginVertical: 20}}
+                  key={picture.pk}>
 
                     <Image
+                      borderColor="grey"
+                      borderWidth={0.5}
+                      borderRadius={2}
                       style={{ width: 300, height: 400 }}
                       source={{ uri: 'http:' + `${picture.image.full}` }}
                     />
@@ -134,7 +155,6 @@ export default class LinksScreen extends React.Component {
       .catch((error) => {
         console.error(error);
       });
-    Alert.alert('pressed!')
   }
 
   _getRandomPicFromCollections = (gameResult) => {
@@ -193,11 +213,11 @@ function getPicsFromLOCApi() {
 const styles = StyleSheet.create({
   getStartedContainer: {
     alignItems: 'center',
-    marginHorizontal: 50,
+    marginHorizontal: 10,
   },
   container: {
     flex: 1,
-    paddingTop: 15,
+    paddingTop: 10,
     backgroundColor: '#fff',
   },
   dateFormatting: {

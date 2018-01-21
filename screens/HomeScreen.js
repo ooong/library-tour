@@ -13,10 +13,11 @@ import { WebBrowser } from 'expo';
 import { Button, Header } from 'react-native-elements'
 import { MonoText } from '../components/StyledText';
 import * as Animatable from 'react-native-animatable';
+import Swiper from 'react-native-swiper'
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = {
-    header: null,
+    header: null
   };
 
   constructor(props) {
@@ -133,6 +134,7 @@ export default class HomeScreen extends React.Component {
     return (
       <View style={styles.container}>
       <Header
+      backgroundColor="green"
             leftComponent={{ icon: 'menu', color: '#fff' }}
             centerComponent={{ text: `score: ${this.state.score}`, style: { color: '#fff' } }}
             rightComponent={{ text: `score: ${this.state.score}`, style: { color: '#fff' } }}
@@ -141,8 +143,51 @@ export default class HomeScreen extends React.Component {
           <View style={styles.welcomeContainer}>
 
           </View>
-          
 
+          {!this.state.playing && 
+
+            <View>
+            <Text>WELCOME! You can either PLAY or EXPLORE</Text>
+
+            <View style={styles.touchableViewContainer}>
+              <TouchableHighlight style={styles.touchableContainer}
+              onPress={() => {
+                this._getRandomPicFromCollections()
+              }}
+              >
+                  <Text>PLAY</Text>
+              </TouchableHighlight>
+            </View>
+          
+            <View style={styles.touchableViewContainer}>
+              <TouchableHighlight style={styles.touchableContainer}>
+                  <Text>EXPLORE</Text>
+              </TouchableHighlight>
+            </View>
+
+            <Swiper style={styles.wrapper} showsButtons={true}>
+            <View style={styles.slide1}>
+              <Text style={styles.text}>Hello Swiper</Text>
+            </View>
+            <View style={styles.slide2}>
+              <Text style={styles.text}>Beautiful</Text>
+            </View>
+            <View style={styles.slide3}>
+              <Text style={styles.text}>And simple</Text>
+            </View>
+          </Swiper>
+          
+          
+          </View>
+          
+          }
+
+ 
+        {this.state.playing && 
+        
+        <View>
+        
+        
 
           <View style={styles.mainPictureContainer} key={this.state.mainPicture.pk}>
             <Text>TITLE: {this.state.mainPicture.title}</Text>
@@ -181,8 +226,10 @@ export default class HomeScreen extends React.Component {
 
             {playingTrue}
             {dateButtons}
-
+      
           </View>
+          </View>
+        }
         </ScrollView>
       </View>
     );
@@ -356,6 +403,18 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     marginVertical: 2
   },
+  touchableViewContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 10
+  },
+  touchableContainer: {
+    alignItems: 'center',
+    marginTop: 10,
+    marginBottom: 20,
+    backgroundColor: 'pink',
+    padding: 10
+  },
   welcomeContainer: {
     alignItems: 'center',
     marginTop: 10,
@@ -443,4 +502,31 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#2e78b7',
   },
+  wrapper: {
+  },
+  slide1: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#9DD6EB',
+  },
+  slide2: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#97CAE5',
+  },
+  slide3: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#92BBD9',
+  },
+  text: {
+    color: '#fff',
+    fontSize: 30,
+    fontWeight: 'bold',
+  }
+    
+  
 });
