@@ -68,31 +68,59 @@ export default class HomeScreen extends React.Component {
     if (this.state.playing) {
       playingTrue = <Text>PLAYING TRUE</Text>
 
-      const buttonDates = []
-      while (buttonDates.length < 4) {
+      const wrongDates = []
+      while (wrongDates.length < 3) {
         let random = this._assignRandomDateButton()
-        if (!buttonDates.includes(this.state.datesArr[random])) {
-          buttonDates.push(this.state.datesArr[random])
+        if (!wrongDates.includes(this.state.datesArr[random])) {
+          wrongDates.push(this.state.datesArr[random])
         }
       }
-      let random = Math.floor(Math.random() * (3 - 0)) + 0
-      buttonDates.splice(random, 1, this.state.mainPicture.created_published_date)
+
+      // const wrongButtons = wrongDates.map(wrongDate => {
+        
+      //     return (
+      //       <Button 
+      //       key={wrongDate}
+      //       onPress={() => {this._handleIncorrectGuess()}}
+      //       title={wrongDate}
+      //     />
+      //     )
+        
+      // })
+
+      const rightButton = 
+
+      <Button 
+      onPress={() => {this._handleCorrectGuess()}}
+      title={this.state.mainPicture.created_published_date}
+    />
+
+      // const allButtons = wrongButtons.push(rightButton)
+
 
 
       dateButtons = 
       <View>
-      {
-        buttonDates.map(buttonDate => {
-          return (
-            <Button 
-            key={buttonDate}
-            onPress={(event) => {this._handleGuessPress(event, this.props.title)}}
-            title={buttonDate}
+        {
+          wrongDates.map(wrongButton => {
+            return (
+              <Button 
+            key={wrongButton}
+            onPress={() => {this._handleIncorrectGuess()}}
+            title={wrongButton}
           />
-          )
-        })
-      }
-      
+            )
+          })
+
+        }
+        {
+
+          <Button 
+          onPress={() => {this._handleCorrectGuess()}}
+          title={this.state.mainPicture.created_published_date}
+        />
+    
+        }
       
       </View>
 
