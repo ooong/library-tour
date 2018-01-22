@@ -141,11 +141,17 @@ export default class HomeScreen extends React.Component {
 
           {!this.state.playing && 
 
-            <View>
-            <Text>LIBRARY TOUR</Text>
-            <Text>An exploration of the Library of Congress's Prints and Photographs Collection</Text>
-            <Text>You can either PLAY or EXPLORE</Text>
+            <View style={styles.getStartedContainer}>
 
+            <View style={styles.libraryContainer}>
+              <Text style={{fontSize: 30}}>LIBRARY TOUR</Text>
+            </View>
+            
+            <View style={{margin: 20, paddingBottom: 18}}>
+              <Text style={{textAlign: 'center', fontSize: 16}}>An exploration of the Library of Congress's Prints and Photographs Collection</Text>
+            </View>
+            
+            
             <View style={styles.touchableViewContainer}>
               <TouchableHighlight style={styles.touchableContainer}
               onPress={() => {
@@ -158,23 +164,9 @@ export default class HomeScreen extends React.Component {
           
             <View style={styles.touchableViewContainer}>
               <TouchableHighlight style={styles.touchableContainer}>
-                  <Text style={styles.touchableText}>EXPLORE</Text>
+                  <Text style={styles.touchableText}>TRAIN</Text>
               </TouchableHighlight>
-            </View>
-
-            <Swiper style={styles.wrapper} showsButtons={true}>
-            <View style={styles.slide1}>
-              <Text style={styles.text}>Hello Swiper</Text>
-            </View>
-            <View style={styles.slide2}>
-              <Text style={styles.text}>Beautiful</Text>
-            </View>
-            <View style={styles.slide3}>
-              <Text style={styles.text}>And simple</Text>
-            </View>
-          </Swiper>
-          
-          
+            </View> 
           </View>
           
           }
@@ -194,17 +186,7 @@ export default class HomeScreen extends React.Component {
               />
             </TouchableHighlight>
 
-            <Button
-              raised
-              backgroundColor="green"
-              borderRadius={25}
-              containerViewStyle={{ borderRadius: 25 }}
-              margin={30}
-              paddingVertical={50}
-              onPress={() => { this._getRandomPicFromCollections() }}
-              title="get random pic"
 
-            />
             <Button
               raised
               backgroundColor="green"
@@ -269,7 +251,7 @@ export default class HomeScreen extends React.Component {
   }
 
   _handleIncorrectGuess = () => {
-    Alert.alert('handleIncorrectGuess!');
+    Alert.alert('Sorry, wrong answer!');
     const gameResult = false
     this._getRandomPicFromCollections(gameResult)
   }
@@ -280,6 +262,39 @@ export default class HomeScreen extends React.Component {
     let currentPic = picArray[random]
     return currentPic
   }
+
+  // _getRandomPicFromCollections = (gameResult) => {
+  //   const collectionsArr = [
+  //     'bbc', 'wpapos', 'pga', 'pos', 'var', 'civwar', 'yan', 'stereo', 'app', 'det', 'cbpr', 'brum', 'wtc', 'spcw', 'wwipos'
+  //   ]
+  //   let collectionIndex = Math.floor(Math.random() * (15 - 0)) + 0
+  //   fetch('https://loc.gov/pictures/search/?co=' + `${collectionsArr[collectionIndex]}` + '&fo=json')
+  //     .then((response) => {
+  //       return response.json()
+  //     })
+  //     .then(responseJson => {
+  //       let results = responseJson.results
+  //       const tenResults = results.slice(10)
+  //       const randomizedArray = [];
+  //       let random = Math.floor(Math.random() * (70 - 0)) + 0
+  //       let finalPic = results[random]
+  //       if (!gameResult) {
+  //         this.setState({
+  //           mainPicture: finalPic,
+  //           playing: true
+  //         })
+  //       } else {
+  //         this.setState({
+  //           mainPicture: finalPic,
+  //           playing: true,
+  //           score: this.state.score + 1
+  //         })
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.error(error);
+  //     })
+  // }
 
   _getRandomPicFromCollections = (gameResult) => {
     const collectionsArr = [
@@ -311,6 +326,8 @@ export default class HomeScreen extends React.Component {
         console.error(error);
       })
   }
+
+  
 
   _openModal() {
     this.setState({ modalVisible: true });
@@ -440,6 +457,11 @@ const styles = StyleSheet.create({
   getStartedContainer: {
     alignItems: 'center',
     marginHorizontal: 50,
+  },
+  libraryContainer: {
+    alignItems: 'center',
+    marginHorizontal: 10,
+    padding: 20
   },
   mainPictureContainer: {
     alignItems: 'center',

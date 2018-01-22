@@ -1,6 +1,6 @@
 import React from 'react';
-import { ScrollView, StyleSheet, Text, TextInput, Button, View, TouchableHighlight, Image, Alert, Modal, Picker } from 'react-native';
-import { SearchBar } from 'react-native-elements'
+import { ScrollView, StyleSheet, Text, TextInput, View, TouchableHighlight, Image, Alert, Modal, Picker } from 'react-native';
+import { SearchBar, Button } from 'react-native-elements'
 
 export default class LinksScreen extends React.Component {
   static navigationOptions = {
@@ -55,23 +55,13 @@ export default class LinksScreen extends React.Component {
 
             <Button
               raised
-              color="green"
+              backgroundColor="green"
+              borderRadius={7}
+              containerViewStyle={{ borderRadius: 7 }}
+              color="white"
               onPress={() => { this._handleSearchPress() }}
               title="SEARCH"
             />
-
-            <View>
-            <Text>Pick a collection</Text>
-            <Picker 
-              color='black'
-              selectedValue={this.state.collection}
-              onValueChange={(itemValue, itemIndex) => this.setState({collection: itemValue})}>
-              <Picker.Item label="WPA posters" value="wpapos" />
-              <Picker.Item label="JavaScript" value="js" />
-            </Picker>
-            <Text>Description</Text>
-            <Text>Description</Text>
-            </View>
 
             <Modal
               visible={this.state.modalVisible}
