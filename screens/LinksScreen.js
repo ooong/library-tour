@@ -46,11 +46,6 @@ export default class LinksScreen extends React.Component {
 
           <View style={styles.getStartedContainer}>
 
-            <SearchBar
-              ref={search => this.search = search}
-              round
-              onChangeText={(text) => this.setState({ text })}
-              placeholder='Type Here...' />
 
             <TextInput
               style={{ height: 80 }}
@@ -131,7 +126,6 @@ export default class LinksScreen extends React.Component {
     );
   }
   _handleSearchPress = () => {
-    this.search.clearText();
     fetch('https://loc.gov/pictures/search/?q=' + `${this.state.text}` + '&fo=json')
       .then((response) => {
         return response.json()
@@ -141,16 +135,22 @@ export default class LinksScreen extends React.Component {
         const tenResults = results.slice(10)
         const randomizedArray = [];
         while (randomizedArray.length < 10) {
-          let random = Math.floor(Math.random() * 300)
-          if (results[random] !== undefined && !randomizedArray.includes(results[random])) {
+          let random = Math.floor(Math.random() * (200 - 0)) + 0
+          if (results[random] !== undefined && 
+            !randomizedArray.includes(results[random]) &&
+            results[random].image.alt !== "item not digitized thumbnail" &&
+            results[random].image.alt !== 'group item thumbnail'&& 
+            results[random].image.alt !== 'Look magazine thumbnail') {
             randomizedArray.push(results[random]);
           }
         }
         return randomizedArray
       })
       .then(randomizedArray => {
+        
 
         this.setState({ pictures: randomizedArray })
+        console.log('RANDOMARRAY', randomizedArray)
       })
       .catch((error) => {
         console.error(error);

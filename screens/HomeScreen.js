@@ -68,8 +68,6 @@ export default class HomeScreen extends React.Component {
     let playingTrue = null
 
     if (this.state.playing) {
-      playingTrue = <Text>PLAYING TRUE</Text>
-
       const wrongDates = []
       while (wrongDates.length < 3) {
         let random = this._assignRandomDateButton()
@@ -134,20 +132,19 @@ export default class HomeScreen extends React.Component {
     return (
       <View style={styles.container}>
       <Header
-      backgroundColor="green"
+      backgroundColor="#408000"
             leftComponent={{ icon: 'menu', color: '#fff' }}
             centerComponent={{ text: `score: ${this.state.score}`, style: { color: '#fff' } }}
             rightComponent={{ text: `score: ${this.state.score}`, style: { color: '#fff' } }}
           />
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-          <View style={styles.welcomeContainer}>
-
-          </View>
 
           {!this.state.playing && 
 
             <View>
-            <Text>WELCOME! You can either PLAY or EXPLORE</Text>
+            <Text>LIBRARY TOUR</Text>
+            <Text>An exploration of the Library of Congress's Prints and Photographs Collection</Text>
+            <Text>You can either PLAY or EXPLORE</Text>
 
             <View style={styles.touchableViewContainer}>
               <TouchableHighlight style={styles.touchableContainer}
@@ -155,13 +152,13 @@ export default class HomeScreen extends React.Component {
                 this._getRandomPicFromCollections()
               }}
               >
-                  <Text>PLAY</Text>
+                  <Text style={styles.touchableText}>PLAY</Text>
               </TouchableHighlight>
             </View>
           
             <View style={styles.touchableViewContainer}>
               <TouchableHighlight style={styles.touchableContainer}>
-                  <Text>EXPLORE</Text>
+                  <Text style={styles.touchableText}>EXPLORE</Text>
               </TouchableHighlight>
             </View>
 
@@ -187,10 +184,8 @@ export default class HomeScreen extends React.Component {
         
         <View>
         
-        
-
           <View style={styles.mainPictureContainer} key={this.state.mainPicture.pk}>
-            <Text>TITLE: {this.state.mainPicture.title}</Text>
+            <Text style={{fontStyle: 'italic'}}>{this.state.mainPicture.title}</Text>
             <TouchableHighlight onPress={() => { Alert.alert('Touchable Highlight!'); }}>
               <Image
                 style={{ width: 300, height: 400 }}
@@ -222,9 +217,7 @@ export default class HomeScreen extends React.Component {
           </View>
 
           <View style={styles.getStartedContainer}>
-            <Text style={styles.navBar}>SCORE: {this.state.score} </Text>
 
-            {playingTrue}
             {dateButtons}
       
           </View>
@@ -290,9 +283,9 @@ export default class HomeScreen extends React.Component {
 
   _getRandomPicFromCollections = (gameResult) => {
     const collectionsArr = [
-      'bbc', 'wpapos', 'pga', 'pos', 'var', 'civwar', 'yan', 'stereo', 'app'
+      'bbc', 'wpapos', 'pga', 'pos', 'var', 'civwar', 'yan', 'stereo', 'app', 'det', 'cbpr', 'brum', 'wtc', 'spcw', 'wwipos'
     ]
-    let collectionIndex = Math.floor(Math.random() * (9 - 0)) + 0
+    let collectionIndex = Math.floor(Math.random() * (15 - 0)) + 0
     fetch('https://loc.gov/pictures/search/?co=' + `${collectionsArr[collectionIndex]}` + '&fo=json')
       .then((response) => {
         return response.json()
@@ -347,7 +340,10 @@ export default class HomeScreen extends React.Component {
         const randomizedArray = [];
         while (randomizedArray.length < 10) {
           let random = Math.floor(Math.random() * 300)
-          if (results[random] !== undefined && !randomizedArray.includes(results[random])) {
+          console.log('RANDOMRESULTS', results[random])
+          if (results[random] !== undefined &&
+            results[random].created_published_date &&
+            !randomizedArray.includes(results[random])) {
             randomizedArray.push(results[random]);
           }
         }
@@ -382,7 +378,7 @@ function getPicsFromLOCApi() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: 'white',
   },
   developmentModeText: {
     marginBottom: 20,
@@ -406,14 +402,23 @@ const styles = StyleSheet.create({
   touchableViewContainer: {
     flex: 1,
     justifyContent: 'center',
-    paddingHorizontal: 10
+    paddingHorizontal: 10,
+    borderRadius: 10
   },
   touchableContainer: {
     alignItems: 'center',
     marginTop: 10,
     marginBottom: 20,
-    backgroundColor: 'pink',
-    padding: 10
+    backgroundColor: '#336600',
+    padding: 20,
+    borderRadius: 10,
+    marginHorizontal: 50
+  },
+  touchableText: {
+    color: 'white',
+    fontSize: 20,
+    lineHeight: 19,
+    textAlign: 'center',
   },
   welcomeContainer: {
     alignItems: 'center',
