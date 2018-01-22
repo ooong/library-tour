@@ -29,14 +29,14 @@ export default class LinksScreen extends React.Component {
     this._closeModal = this._closeModal.bind(this)
   }
 
-  componentDidMount() {
-    const pictures = getPicsFromLOCApi()
-      .then(res => {
-        this.setState({
-          pictures: res
-        })
-      })
-  }
+  // componentDidMount() {
+  //   const pictures = getPicsFromLOCApi()
+  //     .then(res => {
+  //       this.setState({
+  //         pictures: res
+  //       })
+  //     })
+  // }
 
   render() {
     return (
@@ -70,9 +70,18 @@ export default class LinksScreen extends React.Component {
             >
               <View style={styles.modalContainer}>
                 <View style={styles.innerContainer}>
-                  <Text>Title: {this.state.selectedItem.title}</Text>
-                  <Text>Creator: {this.state.selectedItem.creator}</Text>
-                  <Text>Subjects: {this.state.selectedItem.subjects}</Text>
+                <View style={{padding: 20}}>
+                <Text>Title: {this.state.selectedItem.title}</Text>
+                </View>
+                  
+                <View style={{padding: 20}}>
+                <Text>Creator: {this.state.selectedItem.creator}</Text>
+                </View>
+                  
+                <View>
+                <Text>Subjects: {this.state.selectedItem.subjects}</Text>
+                </View>
+                  
                   <Button
                     onPress={() => this._closeModal()}
                     title="Close"
@@ -182,9 +191,6 @@ export default class LinksScreen extends React.Component {
 
 }
 
-
-
-
 function getPicsFromLOCApi() {
   return fetch('http://loc.gov/pictures/search/?q=panda&co=wpapos&fo=json')
     .then((response) => response.json())
@@ -216,7 +222,7 @@ const styles = StyleSheet.create({
   modalContainer: {
     flex: 1,
     justifyContent: 'center',
-    backgroundColor: 'grey',
+    backgroundColor: '#ddff99',
   },
   innerContainer: {
     alignItems: 'center',

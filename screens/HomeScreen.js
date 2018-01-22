@@ -133,7 +133,7 @@ export default class HomeScreen extends React.Component {
       <View style={styles.container}>
       <Header
       backgroundColor="#408000"
-            leftComponent={{ icon: 'menu', color: '#fff' }}
+ 
             centerComponent={{ text: `score: ${this.state.score}`, style: { color: '#fff' } }}
             rightComponent={{ text: `score: ${this.state.score}`, style: { color: '#fff' } }}
           />
