@@ -137,10 +137,7 @@ export default class LinksScreen extends React.Component {
         return randomizedArray
       })
       .then(randomizedArray => {
-        
-
         this.setState({ pictures: randomizedArray })
-        console.log('RANDOMARRAY', randomizedArray)
       })
       .catch((error) => {
         console.error(error);

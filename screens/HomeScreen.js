@@ -263,52 +263,24 @@ export default class HomeScreen extends React.Component {
     return currentPic
   }
 
-  // _getRandomPicFromCollections = (gameResult) => {
-  //   const collectionsArr = [
-  //     'bbc', 'wpapos', 'pga', 'pos', 'var', 'civwar', 'yan', 'stereo', 'app', 'det', 'cbpr', 'brum', 'wtc', 'spcw', 'wwipos'
-  //   ]
-  //   let collectionIndex = Math.floor(Math.random() * (15 - 0)) + 0
-  //   fetch('https://loc.gov/pictures/search/?co=' + `${collectionsArr[collectionIndex]}` + '&fo=json')
-  //     .then((response) => {
-  //       return response.json()
-  //     })
-  //     .then(responseJson => {
-  //       let results = responseJson.results
-  //       const tenResults = results.slice(10)
-  //       const randomizedArray = [];
-  //       let random = Math.floor(Math.random() * (70 - 0)) + 0
-  //       let finalPic = results[random]
-  //       if (!gameResult) {
-  //         this.setState({
-  //           mainPicture: finalPic,
-  //           playing: true
-  //         })
-  //       } else {
-  //         this.setState({
-  //           mainPicture: finalPic,
-  //           playing: true,
-  //           score: this.state.score + 1
-  //         })
-  //       }
-  //     })
-  //     .catch((error) => {
-  //       console.error(error);
-  //     })
-  // }
+
 
   _getRandomPicFromCollections = (gameResult) => {
     const collectionsArr = [
-      'bbc', 'wpapos', 'pga', 'pos', 'var', 'civwar', 'yan', 'stereo', 'app', 'det', 'cbpr', 'brum', 'wtc', 'spcw', 'wwipos'
+      'bbc', 'wpapos', 'pga', 'pos', 'var', 'civwar', 'yan', 'stereo', 'app', 'det', 'brum', 'wtc', 'spcw', 'wwipos'
     ]
-    let collectionIndex = Math.floor(Math.random() * (15 - 0)) + 0
+    let collectionIndex = Math.floor(Math.random() * (14 - 0)) + 0
+    console.log('COLLECTIONINDEX', collectionIndex)
     fetch('https://loc.gov/pictures/search/?co=' + `${collectionsArr[collectionIndex]}` + '&fo=json')
       .then((response) => {
         return response.json()
       })
       .then(responseJson => {
         let results = responseJson.results
+        const tenResults = results.slice(10)
+        console.log('TENRESULTS', tenResults)
         let random = Math.floor(Math.random() * (9 - 0)) + 0
-        let finalPic = results[random]
+        let finalPic = tenResults[random]
         if (!gameResult) {
           this.setState({
             mainPicture: finalPic,
