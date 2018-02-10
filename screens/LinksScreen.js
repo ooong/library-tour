@@ -1,6 +1,7 @@
 import React from 'react';
 import { ScrollView, StyleSheet, Text, TextInput, View, TouchableHighlight, Image, Alert, Modal, Picker } from 'react-native';
 import { SearchBar, Button } from 'react-native-elements'
+import { WebBrowser } from 'expo';
 
 export default class LinksScreen extends React.Component {
   static navigationOptions = {
@@ -81,7 +82,8 @@ export default class LinksScreen extends React.Component {
                 <View>
                 <Text>Subjects: {this.state.selectedItem.subjects}</Text>
                 </View>
-                  
+
+       
                   <Button
                     onPress={() => this._closeModal()}
                     title="Close"
@@ -176,6 +178,7 @@ export default class LinksScreen extends React.Component {
   _openModal(pictureId) {
     const filteredArr = this.state.pictures.filter(picture => picture.pk === pictureId)
     const item = filteredArr[0]
+    console.log('ITEM', item)
     this.setState({
       modalVisible: true,
       selectedItem: item

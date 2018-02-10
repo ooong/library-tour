@@ -69,7 +69,7 @@ export default class HomeScreen extends React.Component {
 
     if (this.state.playing) {
       const wrongDates = []
-      while (wrongDates.length < 3) {
+      while (wrongDates.length < 2) {
         let random = this._assignRandomDateButton()
         if (!wrongDates.includes(this.state.datesArr[random])) {
           wrongDates.push(this.state.datesArr[random])
@@ -164,7 +164,7 @@ export default class HomeScreen extends React.Component {
           
             <View style={styles.touchableViewContainer}>
               <TouchableHighlight style={styles.touchableContainer}>
-                  <Text style={styles.touchableText}>TRAIN</Text>
+                  <Text style={styles.touchableText}>EXPLORE</Text>
               </TouchableHighlight>
             </View> 
           </View>
@@ -185,16 +185,6 @@ export default class HomeScreen extends React.Component {
                 source={{ uri: 'http:' + `${this.state.mainPicture.image.full}` }}
               />
             </TouchableHighlight>
-
-
-            <Button
-              raised
-              backgroundColor="green"
-              borderRadius={7}
-              containerViewStyle={{ borderRadius: 7 }}
-              onPress={() => { this._handleCorrectGuess() }}
-              title={this.state.mainPicture.created_published_date}
-            />
 
           </View>
 
