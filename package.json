@@ -2,7 +2,8 @@
   "main": "node_modules/expo/AppEntry.js",
   "private": true,
   "scripts": {
-    "test": "node ./node_modules/jest/bin/jest.js --watchAll"
+    "test": "node ./node_modules/jest/bin/jest.js --watchAll",
+    "start": "exp start"
   },
   "jest": {
     "preset": "jest-expo"
@@ -12,6 +13,9 @@
     "expo": "^25.0.0",
     "react": "16.2.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-25.0.0.tar.gz",
+    "react-native-animatable": "^1.2.4",
+    "react-native-elements": "^0.19.0",
+    "react-native-swiper": "^1.5.13",
     "react-navigation": "^1.0.0-beta.27"
   },
   "devDependencies": {
