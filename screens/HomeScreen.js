@@ -1,14 +1,5 @@
 import React from 'react';
-import {
-  Image,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View, Alert, TextInput, TouchableHighlight,
-  Modal
-} from 'react-native';
+import { Image, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View, Alert, TextInput, TouchableHighlight, Modal } from 'react-native';
 import { WebBrowser } from 'expo';
 import { Button, Header } from 'react-native-elements'
 import { MonoText } from '../components/StyledText';
@@ -19,7 +10,6 @@ export default class HomeScreen extends React.Component {
   static navigationOptions = {
     header: null
   };
-
   constructor(props) {
     super(props);
     this.state = {
@@ -34,7 +24,6 @@ export default class HomeScreen extends React.Component {
         image: {
           full: "//www.loc.gov/pictures/cdn/service/pnp/highsm/35800/35859r.jpg"
         }
-
       },
       score: 0,
       datesArr: [
@@ -51,7 +40,6 @@ export default class HomeScreen extends React.Component {
     this._getRandomPicFromCollections = this._getRandomPicFromCollections.bind(this)
   }
 
-
   componentDidMount() {
     const pictures = getPicsFromLOCApi()
       .then(res => {
@@ -60,7 +48,6 @@ export default class HomeScreen extends React.Component {
         })
       })
   }
-
 
   render() {
 
@@ -91,39 +78,36 @@ export default class HomeScreen extends React.Component {
 
       dateButtons =
         <View>
-          {
-            wrongDates.map(wrongButton => {
-              return (
-               <View style={styles.dateButtonStyle}
-               key={wrongButton}
-               > 
+          {wrongDates.map(wrongButton => {
+            return (
+              <View style={styles.dateButtonStyle}
+                key={wrongButton}
+              >
                 <Button
                   borderRadius={25}
                   containerViewStyle={{ borderRadius: 25 }}
                   margin={30}
                   backgroundColor="green"
-                  
+
                   onPress={() => { this._handleIncorrectGuess() }}
                   title={wrongButton}
                 />
-                </View>
-              )
-            })
-
-
+              </View>
+            )
+          })
 
           }
           {
             <View style={styles.dateButtonStyle}>
-          <Button
-            borderRadius={25}
-            containerViewStyle={{ borderRadius: 25 }}
-            margin={30}
-            backgroundColor="green"
-            onPress={() => { this._handleCorrectGuess() }}
-            title={this.state.mainPicture.created_published_date}
-          />
-          </View>
+              <Button
+                borderRadius={25}
+                containerViewStyle={{ borderRadius: 25 }}
+                margin={30}
+                backgroundColor="green"
+                onPress={() => { this._handleCorrectGuess() }}
+                title={this.state.mainPicture.created_published_date}
+              />
+            </View>
           }
         </View>
     }
@@ -131,70 +115,60 @@ export default class HomeScreen extends React.Component {
 
     return (
       <View style={styles.container}>
-      <Header
-      backgroundColor="#408000"
- 
-            centerComponent={{ text: `score: ${this.state.score}`, style: { color: '#fff' } }}
-            rightComponent={{ text: `score: ${this.state.score}`, style: { color: '#fff' } }}
-          />
+        <Header
+          backgroundColor="#408000"
+
+          centerComponent={{ text: `score: ${this.state.score}`, style: { color: '#fff' } }}
+          rightComponent={{ text: `score: ${this.state.score}`, style: { color: '#fff' } }}
+        />
         <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
 
-          {!this.state.playing && 
-
+          {!this.state.playing &&
             <View style={styles.getStartedContainer}>
+              <View style={styles.libraryContainer}>
+                <Text style={{ fontSize: 30 }}>LIBRARY TOUR</Text>
+              </View>
 
-            <View style={styles.libraryContainer}>
-              <Text style={{fontSize: 30}}>LIBRARY TOUR</Text>
-            </View>
-            
-            <View style={{margin: 20, paddingBottom: 18}}>
-              <Text style={{textAlign: 'center', fontSize: 16}}>An exploration of the Library of Congress's Prints and Photographs Collection</Text>
-            </View>
-            
-            
-            <View style={styles.touchableViewContainer}>
-              <TouchableHighlight style={styles.touchableContainer}
-              onPress={() => {
-                this._getRandomPicFromCollections()
-              }}
-              >
+              <View style={{ margin: 20, paddingBottom: 18 }}>
+                <Text style={{ textAlign: 'center', fontSize: 16 }}>An exploration of the Library of Congress's Prints and Photographs Collection</Text>
+              </View>
+
+              <View style={styles.touchableViewContainer}>
+                <TouchableHighlight style={styles.touchableContainer}
+                  onPress={() => {
+                    this._getRandomPicFromCollections()
+                  }}
+                >
                   <Text style={styles.touchableText}>PLAY</Text>
-              </TouchableHighlight>
-            </View>
-          
-            <View style={styles.touchableViewContainer}>
-              <TouchableHighlight style={styles.touchableContainer}>
+                </TouchableHighlight>
+              </View>
+
+              <View style={styles.touchableViewContainer}>
+                <TouchableHighlight style={styles.touchableContainer}>
                   <Text style={styles.touchableText}>EXPLORE</Text>
-              </TouchableHighlight>
-            </View> 
-          </View>
-          
+                </TouchableHighlight>
+              </View>
+            </View>
           }
 
- 
-        {this.state.playing && 
-        
-        <View>
-        
-          <View style={styles.mainPictureContainer} key={this.state.mainPicture.pk}>
-            <Text style={{fontStyle: 'italic'}}>{this.state.mainPicture.title}</Text>
-            <TouchableHighlight onPress={() => { Alert.alert('Touchable Highlight!'); }}>
-              <Image
-                style={{ width: 300, height: 400 }}
-                borderRadius={7}
-                source={{ uri: 'http:' + `${this.state.mainPicture.image.full}` }}
-              />
-            </TouchableHighlight>
 
-          </View>
-
-          <View style={styles.getStartedContainer}>
-
-            {dateButtons}
-      
-          </View>
-          </View>
-        }
+          {this.state.playing &&
+            <View>
+              <View style={styles.mainPictureContainer} key={this.state.mainPicture.pk}>
+                <Text style={{ fontStyle: 'italic' }}>{this.state.mainPicture.title}</Text>
+                <TouchableHighlight onPress={() => { Alert.alert('Touchable Highlight!'); }}>
+                  <Image
+                    style={{ width: 300, height: 400 }}
+                    borderRadius={7}
+                    source={{ uri: 'http:' + `${this.state.mainPicture.image.full}` }}
+                  />
+                </TouchableHighlight>
+              </View>
+              <View style={styles.getStartedContainer}>
+                 {dateButtons}
+              </View>
+            </View>
+          }
         </ScrollView>
       </View>
     );
@@ -223,13 +197,6 @@ export default class HomeScreen extends React.Component {
     }
   }
 
-
-  _handleHelpPress = () => {
-    WebBrowser.openBrowserAsync(
-      'https://docs.expo.io/versions/latest/guides/up-and-running.html#can-t-see-your-changes'
-    );
-  };
-
   _handleScorePress = () => {
     this.setState({ score: this.state.score + 1 })
   }
@@ -246,21 +213,17 @@ export default class HomeScreen extends React.Component {
     this._getRandomPicFromCollections(gameResult)
   }
 
-
   _setViewingPic = (picArray) => {
     const random = Math.floor(Math.random() * (9 - 0)) + 0
     let currentPic = picArray[random]
     return currentPic
   }
 
-
-
   _getRandomPicFromCollections = (gameResult) => {
     const collectionsArr = [
       'bbc', 'wpapos', 'pga', 'pos', 'var', 'civwar', 'yan', 'stereo', 'app', 'det', 'brum', 'wtc', 'spcw', 'wwipos'
     ]
     let collectionIndex = Math.floor(Math.random() * (14 - 0)) + 0
-    console.log('COLLECTIONINDEX', collectionIndex)
     fetch('https://loc.gov/pictures/search/?co=' + `${collectionsArr[collectionIndex]}` + '&fo=json')
       .then((response) => {
         return response.json()
@@ -268,7 +231,6 @@ export default class HomeScreen extends React.Component {
       .then(responseJson => {
         let results = responseJson.results
         const tenResults = results.slice(10)
-        console.log('TENRESULTS', tenResults)
         let random = Math.floor(Math.random() * (9 - 0)) + 0
         let finalPic = tenResults[random]
         if (!gameResult) {
@@ -289,8 +251,6 @@ export default class HomeScreen extends React.Component {
       })
   }
 
-  
-
   _openModal() {
     this.setState({ modalVisible: true });
   }
@@ -298,7 +258,6 @@ export default class HomeScreen extends React.Component {
   _closeModal() {
     this.setState({ modalVisible: false });
   }
-
 
   _getRandomNum = () => {
     return Math.floor(Math.random() * (200 - 0)) + 0
@@ -319,7 +278,6 @@ export default class HomeScreen extends React.Component {
         const randomizedArray = [];
         while (randomizedArray.length < 10) {
           let random = Math.floor(Math.random() * 300)
-          console.log('RANDOMRESULTS', results[random])
           if (results[random] !== undefined &&
             results[random].created_published_date &&
             !randomizedArray.includes(results[random])) {
@@ -338,7 +296,6 @@ export default class HomeScreen extends React.Component {
   }
 }
 
-
 function getPicsFromLOCApi() {
   return fetch('http://loc.gov/pictures/search/?q=panda&co=wpapos&fo=json')
     .then((response) => response.json())
@@ -349,8 +306,6 @@ function getPicsFromLOCApi() {
       console.error(error);
     });
 }
-
-
 
 //// STYLING
 
@@ -516,6 +471,5 @@ const styles = StyleSheet.create({
     fontSize: 30,
     fontWeight: 'bold',
   }
-    
-  
+
 });

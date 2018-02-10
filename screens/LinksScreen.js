@@ -30,30 +30,17 @@ export default class LinksScreen extends React.Component {
     this._closeModal = this._closeModal.bind(this)
   }
 
-  // componentDidMount() {
-  //   const pictures = getPicsFromLOCApi()
-  //     .then(res => {
-  //       this.setState({
-  //         pictures: res
-  //       })
-  //     })
-  // }
 
   render() {
     return (
       <View style={styles.container}>
         <ScrollView style={styles.container}>
-
-
           <View style={styles.getStartedContainer}>
-
-
             <TextInput
               style={{ height: 80 }}
               placeholder="Put in a search term!"
               onChangeText={(text) => this.setState({ text })}
             />
-
             <Button
               raised
               backgroundColor="green"
@@ -63,7 +50,6 @@ export default class LinksScreen extends React.Component {
               onPress={() => { this._handleSearchPress() }}
               title="SEARCH"
             />
-
             <Modal
               visible={this.state.modalVisible}
               animationType={'slide'}
@@ -71,19 +57,15 @@ export default class LinksScreen extends React.Component {
             >
               <View style={styles.modalContainer}>
                 <View style={styles.innerContainer}>
-                <View style={{padding: 20}}>
-                <Text>Title: {this.state.selectedItem.title}</Text>
-                </View>
-                  
-                <View style={{padding: 20}}>
-                <Text>Creator: {this.state.selectedItem.creator}</Text>
-                </View>
-                  
-                <View>
-                <Text>Subjects: {this.state.selectedItem.subjects}</Text>
-                </View>
-
-       
+                  <View style={{ padding: 20 }}>
+                    <Text>Title: {this.state.selectedItem.title}</Text>
+                  </View>
+                  <View style={{ padding: 20 }}>
+                    <Text>Creator: {this.state.selectedItem.creator}</Text>
+                  </View>
+                  <View>
+                    <Text>Subjects: {this.state.selectedItem.subjects}</Text>
+                  </View>
                   <Button
                     onPress={() => this._closeModal()}
                     title="Close"
@@ -97,9 +79,9 @@ export default class LinksScreen extends React.Component {
             {this.state.pictures &&
               this.state.pictures.map(picture => {
                 return (
-                  <View 
-                  style={{marginVertical: 20}}
-                  key={picture.pk}>
+                  <View
+                    style={{ marginVertical: 20 }}
+                    key={picture.pk}>
 
                     <Image
                       borderColor="grey"
@@ -137,10 +119,10 @@ export default class LinksScreen extends React.Component {
         const randomizedArray = [];
         while (randomizedArray.length < 10) {
           let random = Math.floor(Math.random() * (200 - 0)) + 0
-          if (results[random] !== undefined && 
+          if (results[random] !== undefined &&
             !randomizedArray.includes(results[random]) &&
             results[random].image.alt !== "item not digitized thumbnail" &&
-            results[random].image.alt !== 'group item thumbnail'&& 
+            results[random].image.alt !== 'group item thumbnail' &&
             results[random].image.alt !== 'Look magazine thumbnail') {
             randomizedArray.push(results[random]);
           }
@@ -178,33 +160,16 @@ export default class LinksScreen extends React.Component {
   _openModal(pictureId) {
     const filteredArr = this.state.pictures.filter(picture => picture.pk === pictureId)
     const item = filteredArr[0]
-    console.log('ITEM', item)
     this.setState({
       modalVisible: true,
       selectedItem: item
     });
-
   }
 
   _closeModal() {
     this.setState({ modalVisible: false });
   }
-
-
-
 }
-
-function getPicsFromLOCApi() {
-  return fetch('http://loc.gov/pictures/search/?q=panda&co=wpapos&fo=json')
-    .then((response) => response.json())
-    .then((responseJson) => {
-      return responseJson.results
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-}
-
 
 const styles = StyleSheet.create({
   getStartedContainer: {
