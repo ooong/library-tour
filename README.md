@@ -11,4 +11,3 @@ Library Tour is a mobile game built with React Native that randomly selects imag
 * Expo's React Native tab template
 
 ## Screenshots
-![screenshot](LibraryTour3copy.png) 
